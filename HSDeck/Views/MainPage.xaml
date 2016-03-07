@@ -1,0 +1,135 @@
+<Page x:Class="HSDeck.Views.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:Behaviors="using:Template10.Behaviors"
+      xmlns:Core="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:Interactivity="using:Microsoft.Xaml.Interactivity"
+      xmlns:controls="using:Template10.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="using:HSDeck.Views"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:vm="using:HSDeck.ViewModels" mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:MainPageViewModel x:Name="MainPageViewModel" />
+    </Page.DataContext>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="AdaptiveVisualStateGroup">
+                <VisualState x:Name="VisualStateNarrow">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NarrowMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for narrow view  -->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateNormal">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource NormalMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for normal view  -->
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="VisualStateWide">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="{StaticResource WideMinWidth}" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!--  TODO: change properties for wide view  -->
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--  page header  -->
+        <controls:PageHeader Content="Main Page">
+            <controls:PageHeader.SecondaryCommands>
+                <AppBarButton Click="{x:Bind MainPageViewModel.GotoSettings}" Label="Settings" />
+                <AppBarButton Click="{x:Bind MainPageViewModel.GotoPrivacy}" Label="Privacy" />
+                <AppBarButton Click="{x:Bind MainPageViewModel.GotoAbout}" Label="About" />
+            </controls:PageHeader.SecondaryCommands>
+        </controls:PageHeader>
+
+        <!--  page content  -->
+        <StackPanel Grid.Row="1" VerticalAlignment="Top" Orientation="Vertical"
+                    Padding="12,8,0,0">
+
+            <!-- <StackPanel Orientation="Horizontal">
+                <!- - Default content - ->
+                <controls:Resizer>
+                    <TextBox Width="200" MinWidth="200" MinHeight="60"
+                         Margin="0" Header="Parameter to pass"
+                         Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         TextWrapping="Wrap">
+                        <Interactivity:Interaction.Behaviors>
+                            <Behaviors:TextBoxEnterKeyBehavior>
+                                <Core:CallMethodAction MethodName="GotoDetailsPage" TargetObject="{Binding}" />
+                            </Behaviors:TextBoxEnterKeyBehavior>
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </TextBox>
+                </controls:Resizer>
+
+                <Button Margin="12,0" VerticalAlignment="Bottom"
+                    Click="{x:Bind ViewModel.GotoDetailsPage}" Content="Submit" />
+            </StackPanel> -->
+
+            <Image Height="187" Source="ms-appx:///Assets/hearthstone-logo.png" Margin="0,0,10,0" />
+
+            <StackPanel Orientation="Horizontal" Margin="0, 40, 0, 40">
+                <!-- Search card -->
+                <controls:Resizer>
+                    <TextBox Width="200" MinWidth="200" MinHeight="60"
+                             Margin="0" Header="Research Card by Name of ID"
+                             Text="{Binding CardName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             TextWrapping="Wrap">
+                        <Interactivity:Interaction.Behaviors>
+                            <Behaviors:TextBoxEnterKeyBehavior>
+                                <Core:CallMethodAction MethodName="GotoCardDetailsPage" TargetObject="{Binding}" />
+                            </Behaviors:TextBoxEnterKeyBehavior>
+                            <Core:EventTriggerBehavior>
+                                <Behaviors:FocusAction />
+                            </Core:EventTriggerBehavior>
+                        </Interactivity:Interaction.Behaviors>
+                    </TextBox>
+                </controls:Resizer>
+
+                <Button Margin="12,0" VerticalAlignment="Bottom"
+                        Click="{x:Bind MainPageViewModel.GotoCardDetailsPage}" Content="Search" />
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Patch Version : " />
+                <TextBlock Text="{Binding PatchInfos.patch}" Margin="20, 0, 0, 0"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <ComboBox Header="Classes" Name="ComboBoxClasses" ItemsSource="{Binding PatchInfos.classes}" SelectedValue="{Binding SelectedClasseName, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[0]}"  />
+                    <Button VerticalAlignment="Bottom" Click="{x:Bind MainPageViewModel.GoToClassCards}" Content="See cards" />
+                </StackPanel>
+
+                <ComboBox Header="Sets" Name="ComboBoxSets" ItemsSource="{Binding PatchInfos.sets, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[1]}" />
+                <ComboBox Header="Types" Name="ComboBoxTypes" ItemsSource="{Binding PatchInfos.types, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[2]}"  />
+                <ComboBox Header="Factions" Name="ComboBoxFactions" ItemsSource="{Binding PatchInfos.factions, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[3]}"  />
+                <ComboBox Header="Qualities" Name="ComboBoxQualities" ItemsSource="{Binding PatchInfos.qualities, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[4]}"  />
+                <ComboBox Header="Races" Name="ComboBoxRaces" ItemsSource="{Binding PatchInfos.races, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[5]}"  />
+                <ComboBox Header="Locales" Name="ComboBoxLocales" ItemsSource="{Binding PatchInfos.locales, Mode=TwoWay}" SelectedIndex="{Binding DefaultSelectedIndex[6]}"  />
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Page>
+

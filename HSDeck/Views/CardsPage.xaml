@@ -1,0 +1,59 @@
+﻿<Page x:Class="HSDeck.Views.CardsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="using:HSDeck.Views"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:models="using:HSDeck.Models"
+      xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+      xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+      xmlns:vm="using:HSDeck.ViewModels" x:Name="ThisPage" mc:Ignorable="d">
+
+    <Page.DataContext>
+        <vm:CardsPageViewModel x:Name="CardsPageViewModel" />
+    </Page.DataContext>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Grid.Row="0" Text="You can double click a card in the list to view its details." Margin="20, 20, 0, 20" />
+
+        <ScrollViewer Grid.Row="1">
+            <ListView Name="CardsListView" ItemsSource="{Binding Cards}" CanDragItems="True" DragItemsStarting="Cards_OnDragItemsStarting"
+                      ScrollViewer.HorizontalScrollMode="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapGrid Orientation="Horizontal" Margin="0"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Card">
+                        <StackPanel Orientation="Vertical">
+                            <Image Source="{x:Bind Image}" Width="160" Height="160" DoubleTapped="Card_DoubleTapped" />
+                            <TextBlock Text="{x:Bind name}" MaxWidth="160" TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+        <ScrollViewer Grid.Row="1" Grid.Column="1">
+            <ListView ItemsSource="{Binding DeckCards}" SelectedItem="{Binding SelectedCardInDeck, Mode=TwoWay}"  AllowDrop="True" Name="DeckListView" DragOver="Deck_OnDragOver" Drop="Deck_OnDrop">
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Card" >
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{x:Bind name}" MaxWidth="150" TextTrimming="WordEllipsis" HorizontalAlignment="Left" VerticalAlignment="Bottom" DoubleTapped="DeckCard_DoubleTapped" />
+                            <TextBlock Text="{x:Bind counter}" MaxWidth="10" Margin="20,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</Page>
